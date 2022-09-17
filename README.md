@@ -14,3 +14,4 @@
 * 实现 commit 根据用户传入btype 执行对应 mutation
 * 实现 dispatch 根据用户传入btype 执行对应 mutation, 同时传递上下文
 * 实现 getters 对 state 作派生
+## 

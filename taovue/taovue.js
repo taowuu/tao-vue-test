@@ -1,3 +1,5 @@
+// 
+
 // 给一个obj定义一个响应式的属性
 function defineReactive(obj, key, val) {
   // 递归
@@ -65,7 +67,7 @@ class Observer {
   }
 }
 
-class KVue {
+class TaoVue {
   constructor(options) {
     // 0.保存选项
     this.$options = options;
@@ -129,19 +131,26 @@ class Compile {
     this.update(n, RegExp.$1, "text");
   }
 
-  // 编译元素：遍历它的所有特性，看是否k-开头指令，或者@事件
+  // 编译元素：遍历它的所有特性，看是否tao-开头指令，或者@事件
   compileElement(n) {
     const attrs = n.attributes;
     Array.from(attrs).forEach((attr) => {
-      // k-text="xxx"
-      // name = k-text,value = xxx
+      // tao-text="xxx"
+      // name = tao-text,value = xxx
       const attrName = attr.name;
       const exp = attr.value;
       // 指令
       if (this.isDir(attrName)) {
         // 执行特定指令处理函数
-        const dir = attrName.substring(2);
+        const dir = attrName.substring(4);
         this[dir] && this[dir](n, exp);
+      }
+      // 事件处理
+      if(this.isEvent(attrName)) {
+        // @click='onClick'
+        // click
+        const dir = attrName.substring(1)
+        this.eventHandler(n, exp, dir)
       }
     });
   }
@@ -157,7 +166,7 @@ class Compile {
     })
   }
 
-  // k-text
+  // tao-text
   text(node, exp) {
     this.update(node, exp, "text");
   }
@@ -166,7 +175,7 @@ class Compile {
     node.textContent = val;
   }
 
-  // k-html
+  // tao-html
   html(node, exp) {
     this.update(node, exp, "html");
   }
@@ -176,7 +185,28 @@ class Compile {
   }
   
   isDir(attrName) {
-    return attrName.startsWith("k-");
+    return attrName.startsWith("tao-");
+  }
+
+  isEvent(dir) {
+    return dir.indexOf('@') === 0 
+  }
+
+  eventHandler(node, exp, dir) {
+    const fn = this.$vm.$options && this.$vm.$options.methods[exp]
+    node.addEventListener(dir, fn.bind(this.$vm))
+  }
+
+  // tao-model='xx'
+  model(node, exp) {
+    this.update(node, exp, "model");
+    node.addEventListener('input', e => {
+      this.$vm[exp] = e.target.value
+    })
+  }
+
+  modelUpdater(node, val) {
+    node.value = val;
   }
 }
 

@@ -2,18 +2,18 @@
 <div id="app">
   <p @click="add">{{counter}}</p>
   <p>{{counter}}</p>
-  <p k-text="counter"></p>
-  <p k-html="desc"></p>
-  <input type="text" k-model="desc">
+  <p tao-text="counter"></p>
+  <p tao-html="desc"></p>
+  <input type="text" tao-model="desc">
 </div>
 
-<script src="./kvue.js"></script>
+<script src="./taovue.js"></script>
 <script>
-  const app = new KVue({
+  const app = new TaoVue({
     el: '#app',
     data: {
       counter: 1,
-      desc: '<span style="color:red">村长真棒</span>'
+      desc: '<span style="color:red">html red</span>'
     },
     methods: {
       add() {
@@ -21,7 +21,7 @@
       }
     },
   })
-  setInterval(() => {
-    app.counter++
-  }, 1000);
+  // setInterval(() => {
+  //   app.counter++
+  // }, 3000);
 </script>
